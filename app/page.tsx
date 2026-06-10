@@ -2,12 +2,20 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './supabase'
 import Link from 'next/link'
+import { User } from '@supabase/supabase-js'
 
 export default function Home() {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setUser(data.user))
+    supabase.auth.getUser().then(({ data }) => {
+      // التأكد من وجود data والـ user بداخلها بشكل آمن لـ TypeScript
+      if (data && data.user) {
+        setUser(data.user)
+      } else {
+        setUser(null)
+      }
+    }).catch(() => setUser(null)) // حماية في حال فشل الطلب بالكامل
   }, [])
 
   const handleLogout = async () => {
