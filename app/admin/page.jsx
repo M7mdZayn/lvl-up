@@ -5,7 +5,6 @@ import { supabase } from '../supabase'
 export default function AdminPage() {
   const [orders, setOrders] = useState([])
   const [user, setUser] = useState(null)
-
   const ADMIN_EMAIL = 'zzaiin07@gmail.com'
 
   useEffect(() => {
@@ -14,7 +13,7 @@ export default function AdminPage() {
       if (data.user?.email === ADMIN_EMAIL) {
         supabase
           .from('orders')
-          .select('*, courses(*)')
+          .select('*, courses(*), profiles(username, email)')
           .order('created_at', { ascending: false })
           .then(({ data: ordersData }) => setOrders(ordersData || []))
       }
@@ -22,46 +21,55 @@ export default function AdminPage() {
   }, [])
 
   if (!user || user.email !== ADMIN_EMAIL) return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-      <p className="text-xl text-red-400">غير مصرح لك بالدخول</p>
+    <div className="min-h-screen bg-[#0d1117] text-white flex items-center justify-center">
+      <p className="text-red-400 text-xl">غير مصرح لك بالدخول</p>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 px-8 py-4">
-        <h1 className="text-2xl font-bold text-purple-400">لوحة الأدمن — LVL UP</h1>
-      </nav>
-
+    <div className="min-h-screen bg-[#0d1117] text-white">
       <div className="max-w-6xl mx-auto px-8 py-12">
-        <h2 className="text-2xl font-bold mb-6">الطلبات ({orders.length})</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full bg-gray-800 rounded-xl">
+        <h2 className="text-3xl font-black mb-2">لوحة الأدمن</h2>
+        <p className="text-gray-500 mb-8">إجمالي الطلبات: {orders.length}</p>
+
+        <div className="overflow-x-auto rounded-2xl border border-gray-800">
+          <table className="w-full bg-[#161b22]">
             <thead>
-              <tr className="text-purple-400 text-right border-b border-gray-700">
-                <th className="p-4">المستخدم</th>
-                <th className="p-4">الدورة</th>
-                <th className="p-4">السعر</th>
-                <th className="p-4">الحالة</th>
-                <th className="p-4">التاريخ</th>
+              <tr className="text-[#00c896] text-sm border-b border-gray-800">
+                <th className="p-4 text-right">المستخدم</th>
+                <th className="p-4 text-right">الإيميل</th>
+                <th className="p-4 text-right">الدورة</th>
+                <th className="p-4 text-right">السعر</th>
+                <th className="p-4 text-right">الحالة</th>
+                <th className="p-4 text-right">التاريخ</th>
+                <th className="p-4 text-right">الساعة</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map(order => (
-                <tr key={order.id} className="border-b border-gray-700 hover:bg-gray-700">
-                  <td className="p-4 text-sm text-gray-400">{order.user_id?.slice(0, 8)}...</td>
-                  <td className="p-4">{order.courses?.title}</td>
-                  <td className="p-4 text-purple-400">
-                    {order.courses?.is_free ? 'مجاني' : `${order.courses?.price} ريال`}
-                  </td>
-                  <td className="p-4">
-                    <span className="bg-yellow-600 px-2 py-1 rounded text-sm">{order.status}</span>
-                  </td>
-                  <td className="p-4 text-sm text-gray-400">
-                    {new Date(order.created_at).toLocaleDateString('ar-SA')}
-                  </td>
-                </tr>
-              ))}
+              {orders.map(order => {
+                const date = new Date(order.created_at)
+                return (
+                  <tr key={order.id} className="border-b border-gray-800 hover:bg-[#1c2128] transition-colors">
+                    <td className="p-4 font-bold text-white">{order.profiles?.username || '—'}</td>
+                    <td className="p-4 text-gray-400 text-sm">{order.profiles?.email || '—'}</td>
+                    <td className="p-4">{order.courses?.title}</td>
+                    <td className="p-4 text-[#00c896] font-bold">
+                      {order.courses?.is_free ? 'مجاني' : `${order.courses?.price} ريال`}
+                    </td>
+                    <td className="p-4">
+                      <span className="bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full text-xs font-bold">
+                        {order.status}
+                      </span>
+                    </td>
+                    <td className="p-4 text-gray-400 text-sm">
+                      {date.toLocaleDateString('ar-SA')}
+                    </td>
+                    <td className="p-4 text-gray-400 text-sm">
+                      {date.toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit' })}
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

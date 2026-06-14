@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { supabase } from '../supabase'
-import Link from 'next/link'
 
 const courseImages = {
   'أساسيات الأمن السيبراني': 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&q=80',
@@ -30,21 +29,6 @@ export default function CoursesPage() {
       <div className="absolute inset-0 opacity-[0.04]"
         style={{backgroundImage: 'linear-gradient(#00c896 1px, transparent 1px), linear-gradient(90deg, #00c896 1px, transparent 1px)', backgroundSize: '50px 50px'}} />
 
-      <nav className="relative z-10 flex justify-between items-center px-8 py-5 border-b border-[#00c896]/10">
-        <Link href="/" className="text-2xl font-black">LVL <span className="text-[#00c896]">UP</span></Link>
-        <div className="flex gap-6 items-center">
-          {user ? (
-            <>
-              <Link href="/cart" className="text-gray-400 hover:text-[#00c896] transition-colors text-sm">السلة</Link>
-              <button onClick={async () => { await supabase.auth.signOut(); setUser(null) }}
-                className="text-gray-500 hover:text-red-400 text-sm">خروج</button>
-            </>
-          ) : (
-            <Link href="/auth" className="bg-[#00c896] text-black px-5 py-2 rounded-lg font-bold text-sm">دخول</Link>
-          )}
-        </div>
-      </nav>
-
       <div className="relative z-10 max-w-6xl mx-auto px-8 py-12">
         <div className="mb-10">
           <h1 className="text-4xl font-black mb-2">الدورات المتاحة</h1>
@@ -67,7 +51,6 @@ export default function CoursesPage() {
                   </span>
                 </div>
               </div>
-
               <div className="p-5">
                 <h2 className="text-lg font-bold mb-2">{course.title}</h2>
                 <p className="text-gray-500 text-sm mb-4 leading-relaxed">{course.description}</p>

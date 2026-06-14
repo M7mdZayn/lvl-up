@@ -26,43 +26,48 @@ export default function CartPage() {
   }
 
   if (!user) return (
-    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+    <div className="min-h-screen bg-[#0d1117] text-white flex items-center justify-center">
       <div className="text-center">
-        <p className="text-xl mb-4">سجّل دخول عشان تشوف سلتك</p>
-        <Link href="/auth" className="bg-purple-600 px-6 py-2 rounded-lg">دخول</Link>
+        <p className="text-xl mb-4 text-gray-400">سجّل دخول عشان تشوف سلتك</p>
+        <Link href="/auth" className="bg-[#00c896] text-black px-6 py-2 rounded-lg font-bold">دخول</Link>
       </div>
     </div>
   )
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 px-8 py-4 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-purple-400">LVL UP</Link>
-        <Link href="/courses" className="hover:text-purple-400">الدورات</Link>
-      </nav>
-
+    <div className="min-h-screen bg-[#0d1117] text-white">
       <div className="max-w-4xl mx-auto px-8 py-12">
-        <h1 className="text-3xl font-bold mb-8">سلتي</h1>
+        <h1 className="text-3xl font-black mb-2">سلتي 🛒</h1>
+        <p className="text-gray-500 mb-8">{orders.length} دورة في السلة</p>
+
         {orders.length === 0 ? (
-          <p className="text-gray-400">السلة فاضية</p>
+          <div className="text-center py-20 border border-gray-800 rounded-2xl">
+            <p className="text-gray-500 text-lg mb-4">السلة فاضية</p>
+            <Link href="/courses" className="bg-[#00c896] text-black px-6 py-2 rounded-lg font-bold">تصفح الدورات</Link>
+          </div>
         ) : (
           <div className="space-y-4">
             {orders.map(order => (
-              <div key={order.id} className="bg-gray-800 rounded-xl p-6 flex justify-between items-center">
+              <div key={order.id} className="bg-[#161b22] border border-gray-800 hover:border-[#00c896]/30 rounded-2xl p-6 flex justify-between items-center transition-all">
                 <div>
-                  <h2 className="text-xl font-bold">{order.courses?.title}</h2>
-                  <p className="text-purple-400">
+                  <h2 className="text-lg font-bold mb-1">{order.courses?.title}</h2>
+                  <p className="text-[#00c896] font-black">
                     {order.courses?.is_free ? 'مجاني' : `${order.courses?.price} ريال`}
                   </p>
                 </div>
-                <button
-                  onClick={() => removeFromCart(order.id)}
-                  className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg"
-                >
-                  حذف
+                <button onClick={() => removeFromCart(order.id)}
+                  className="bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/30 px-4 py-2 rounded-lg text-sm font-bold transition-all">
+                  حذف 🗑️
                 </button>
               </div>
             ))}
+
+            <div className="border-t border-gray-800 pt-6 flex justify-between items-center">
+              <p className="text-gray-400">الإجمالي:</p>
+              <p className="text-2xl font-black text-[#00c896]">
+                {orders.reduce((sum, o) => sum + (o.courses?.is_free ? 0 : o.courses?.price || 0), 0)} ريال
+              </p>
+            </div>
           </div>
         )}
       </div>
