@@ -51,7 +51,7 @@ export default function AuthPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black text-white">LVL <span className="text-[#00c896]">UP</span></h1>
-          <p className="text-gray-500 text-sm mt-1">منصة الأمن السيبراني العربية</p>
+          <p className="text-gray-500 text-sm mt-1">منصة الأمن السيبراني </p>
         </div>
 
         <div className="bg-[#161b22] border border-[#00c896]/20 rounded-2xl p-8 shadow-2xl shadow-[#00c896]/5">
