@@ -5,11 +5,18 @@ import Link from 'next/link'
 
 export default function Home() {
   const [user, setUser] = useState<any>(null)
+  const [text, setText] = useState('')
+  const fullText = 'ارفع مستواك في الأمن السيبراني'
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data?.user ?? null)
-    })
+    supabase.auth.getUser().then(({ data }) => setUser(data?.user ?? null))
+    let i = 0
+    const interval = setInterval(() => {
+      setText(fullText.slice(0, i))
+      i++
+      if (i > fullText.length) clearInterval(interval)
+    }, 80)
+    return () => clearInterval(interval)
   }, [])
 
   const handleLogout = async () => {
@@ -18,27 +25,71 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
-      <nav className="bg-gray-800 px-8 py-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-purple-400">LVL UP</h1>
-        <div className="flex gap-4">
-          <Link href="/courses" className="hover:text-purple-400">الدورات</Link>
+    <div className="min-h-screen bg-[#0d1117] text-white relative overflow-hidden">
+      {/* Grid */}
+      <div className="absolute inset-0 opacity-[0.07]"
+        style={{backgroundImage: 'linear-gradient(#00c896 1px, transparent 1px), linear-gradient(90deg, #00c896 1px, transparent 1px)', backgroundSize: '50px 50px'}} />
+
+      {/* Glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#00c896] opacity-[0.06] rounded-full blur-3xl" />
+
+      {/* Navbar */}
+      <nav className="relative z-10 flex justify-between items-center px-8 py-5 border-b border-[#00c896]/10 backdrop-blur-sm">
+        <h1 className="text-2xl font-black">LVL <span className="text-[#00c896]">UP</span></h1>
+        <div className="flex gap-6 items-center">
+          <Link href="/courses" className="text-gray-400 hover:text-[#00c896] transition-colors text-sm">الدورات</Link>
           {user ? (
             <>
-              <Link href="/cart" className="hover:text-purple-400">السلة</Link>
-              <button onClick={handleLogout} className="hover:text-red-400">خروج</button>
+              <Link href="/cart" className="text-gray-400 hover:text-[#00c896] transition-colors text-sm">السلة</Link>
+              <button onClick={handleLogout} className="text-gray-500 hover:text-red-400 transition-colors text-sm">خروج</button>
             </>
           ) : (
-            <Link href="/auth" className="bg-purple-600 px-4 py-1 rounded-lg hover:bg-purple-700">دخول</Link>
+            <Link href="/auth" className="bg-[#00c896] text-black px-5 py-2 rounded-lg font-bold text-sm hover:bg-[#00b085] transition-all hover:scale-105">
+              دخول
+            </Link>
           )}
         </div>
       </nav>
-      <div className="flex flex-col items-center justify-center text-center py-24 px-4">
-        <h2 className="text-5xl font-bold mb-6">ارفع مستواك في <span className="text-purple-400">الأمن السيبراني</span></h2>
-        <p className="text-gray-400 text-xl mb-8">دورات احترافية باللغة العربية للمبتدئين والمحترفين</p>
-        <Link href="/courses" className="bg-purple-600 hover:bg-purple-700 px-8 py-3 rounded-xl text-lg font-bold">
-          تصفح الدورات
-        </Link>
+
+      {/* Hero */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center min-h-[85vh] px-4">
+        {/* Badge */}
+        <div className="flex items-center gap-2 bg-[#00c896]/10 border border-[#00c896]/20 text-[#00c896] text-xs px-4 py-2 rounded-full mb-8 animate-pulse">
+          <span className="w-2 h-2 bg-[#00c896] rounded-full"></span>
+          منصة الأمن السيبراني العربية #1
+        </div>
+
+        {/* Typing */}
+        <h2 className="text-5xl md:text-6xl font-black mb-6 leading-tight">
+          {text}<span className="text-[#00c896] animate-pulse">|</span>
+        </h2>
+
+        <p className="text-gray-500 text-lg mb-10 max-w-xl">
+          دورات احترافية باللغة العربية — من الصفر للاحتراف
+        </p>
+
+        <div className="flex gap-4">
+          <Link href="/courses"
+            className="bg-[#00c896] text-black px-8 py-3 rounded-xl font-black hover:bg-[#00b085] transition-all hover:scale-105 hover:shadow-lg hover:shadow-[#00c896]/20">
+            تصفح الدورات
+          </Link>
+          {!user && (
+            <Link href="/auth"
+              className="border border-[#00c896]/30 text-[#00c896] px-8 py-3 rounded-xl font-bold hover:bg-[#00c896]/10 transition-all">
+              إنشاء حساب
+            </Link>
+          )}
+        </div>
+
+        {/* Stats */}
+        <div className="flex gap-12 mt-20 text-center">
+          {[['50K+', 'مستخدم'], ['100+', 'دورة'], ['4.9★', 'تقييم']].map(([num, label]) => (
+            <div key={label}>
+              <p className="text-2xl font-black text-[#00c896]">{num}</p>
+              <p className="text-gray-600 text-sm">{label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
